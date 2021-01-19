@@ -1,0 +1,29 @@
+//rGrp - create group with pivot centered and rename "grp_"...
+
+
+//Create group...
+string $cGrp = `group`;
+
+//Grab the child of the group...
+string $nxtObj[] = `pickWalk -d down`;
+
+//Create locator.  We use a locator to match the group's pivot with the pivot of the selected joint(s)...
+string $locPs_cGrp[] = `spaceLocator`;
+
+//Align the locator to the pivot of the selected joint(s)...
+pointConstraint $nxtObj[0] $locPs_cGrp[0];
+
+//Find the world space position of the locator...
+float $wsSel[] = `xform -q -ws -t $locPs_cGrp[0]`;
+
+//Move the pivot of each group to the locator's position...
+xform -ws -piv ($wsSel[0]) ($wsSel[1]) ($wsSel[2]) $cGrp;
+
+//We can now delete the locator...
+delete $locPs_cGrp[0];
+
+//Rename the group to "grp_(selected object)"...
+string $rnmCGrp = `rename $cGrp ("grp_" + $nxtObj[0])`;
+
+//Finally, select the group.
+select $rnmCGrp;

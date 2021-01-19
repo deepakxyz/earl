@@ -1,0 +1,10 @@
+//rJnt - Rename joint to "jnt_" + namespace object......       
+        
+//Find selection...
+string $selPnl[] = `ls -sl`;
+//Tokenize namespace objects
+string $split[];  
+tokenize $selPnl[0] ":" $split ;  
+//Remove namespaces from 2nd selection and rename...
+string $rmvNmsp = $split[size($split)-1] ; 
+rename ($selPnl[1]) ("jnt_" + $rmvNmsp);

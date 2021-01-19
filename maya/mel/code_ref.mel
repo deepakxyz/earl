@@ -1,0 +1,78 @@
+// for loop example
+
+string $selection[] = `ls -sl`;
+
+for ($each in $selection){
+    print $each;
+}
+
+//---------------------------------------
+// scale the selection loop with undo chunk
+
+string $selection[] = `ls -sl`;
+
+undoInfo - ock;
+for ($each in $selection){
+    float $rescale = $rescale + 1;
+    scale  -r $rescale $rescale $rescale $each;
+}
+
+undoInfo - cck;
+
+//---------------------------------------
+// align to object using parent constraint
+
+//creates parent constrinat
+string $parentCns[] = `parentConstraint`;
+
+//removes the parent constraint
+delete $parentCns;
+
+
+
+//---------------------------------------
+//create joint on every CV's
+
+//select the CV's
+string $sel_cv[] = `ls -sl -fl`;
+
+for ($all_cvs in $sel_cv){
+    
+    float $getCV_x = `getAttr ($all_cvs + ".xValue")`;
+    float $getCV_y = `getAttr ($all_cvs + ".yValue")`;
+    float $getCV_z = `getAttr ($all_cvs + ".zValue")`;
+    
+    select -cl;
+    
+    string $makeJnt = `joint`;
+    setAttr ($makeJnt + ".tx") $getCV_x;
+    setAttr ($makeJnt + ".ty") $getCV_y;
+    setAttr ($makeJnt + ".tz") $getCV_z;
+    
+
+}
+
+//---------------------------------------
+// store and resotre poses
+string $storedValue = "";
+
+string $selection[] = `ls - sl`;
+
+
+if (size($selection) < 1 ){
+    warning "Must select atleast one object!";
+}
+
+else{
+    for ($i in $selection){
+        string $keyable[] = `listAttr -k -r -w -c -u $i`;
+        
+        for($vals in $keyable){
+            float $findVal = `getAttr ($i + "." + $vals) `;
+            string $storeVal = "setAttr " + ($i + "." + $vals) + " " + $findVal + ";\n";
+            $storedValue = $storeVal + $storedValue;
+        }
+    }
+}
+
+eval $storedValue;

@@ -1,0 +1,40 @@
+//oOT - Object Offset Control Tool
+
+if( `objExists makeNurbCircle1` ) {
+    warning "Remove or rename -makeNurbCircle1-";
+} else {
+    
+    //Find selection...
+    string $sel[] = `ls -sl`;
+    
+    //Check selection!  Must have 2 objects selected!
+    if (size($sel) != 2){
+        warning "Must have 2 objects selected!";
+    } else if (size($sel) == 2){
+        //If all is well, create constraint curve and rename...
+        string $crvDrv[] = `circle`;
+        //Tokenize namespace objects
+        string $split[] ;  
+        tokenize $sel[1] ":" $split ;  
+        //Remove namespaces from 2nd selection and rename...
+        string $rmvNmsp = $split[size($split)-1] ; 
+        string $rnmCrv = `rename ($crvDrv[0]) ("crvOffset_" + $rmvNmsp)`;
+       //Match curve to joint that will drive it...
+        string $prtCnsLc[] = `parentConstraint $sel[0] $rnmCrv`;
+        //Find and delete curve's parent constraint...
+        string $findCrvCns[] = `listRelatives -type parentConstraint $rnmCrv`;
+        select $findCrvCns; doDelete;
+        //Parent curve to joint...
+        parent $rnmCrv $sel[0];
+        //Create curve "size" attribute
+        addAttr -at "float" -ln "size" -k 1 -dv 1.0 $rnmCrv;
+        //Connect local scale of curve into its new "size" parameter...
+        connectAttr -f ($rnmCrv + ".size") ("makeNurbCircle1.radius");
+        //Rename "makeNurbCircle" node so it remains unique...
+        rename "makeNurbCircle1" ("mnc_" + $rnmCrv);
+        //Now, Parent Constrain 2nd selection (mesh) to curve...
+        parentConstraint -mo -weight 1 $rnmCrv $sel[1];
+        //Select curve to edit size.
+        select $rnmCrv;
+    }
+}

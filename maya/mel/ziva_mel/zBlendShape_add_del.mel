@@ -1,0 +1,25 @@
+proc zBlendShape(){
+    string $selectionAnim[] = `ls -sl`;
+    // set blendShape with keyFrame
+    for ($obj in $selectionAnim){
+        string $zString = ($obj + "_zBone");
+        string $blendShp_string = ($obj + "_blendShape");
+        string $blndShp[] = `blendShape -n $blendShp_string $obj $zString`;
+        string $bS =  ($blndShp[0] + "." + $obj);
+        string $bsEnvelope = ($blendShp_string + ".envelope");
+        print $bsEnvelope;
+        setAttr $bS 1;
+        setKeyframe -v 0 -t 0sec $bsEnvelope;
+        setKeyframe -v 1 -t 0.220sec $bsEnvelope;
+    }
+}
+
+proc delzBlendShape(){
+    string $selectionAnim[] = `ls -sl`;
+    // delete blendShape
+    for ($obj in $selectionAnim){
+        string $blendShp_string = ($obj + "_blendShape");
+        delete $blendShp_string;
+        
+    }
+}

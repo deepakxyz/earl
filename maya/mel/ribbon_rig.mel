@@ -1,0 +1,87 @@
+global proc ribbonRig(string $surface){
+    // surfaceName
+    string $surfaceName = $surface;
+    //get total spansU and spansV
+    int $spansU = `getAttr ($surfaceName + ".spansU")`;
+    int $spansV = `getAttr ($surfaceName + ".spansV")`;
+    int $span;
+    // set the longest span of the surface to the $span attribute
+    if ($spansU > $spansV){
+        $span = $spansU + 2;
+    }else{
+        $span = $spansV + 2;
+    }
+
+
+    // createing nHair with the span of the U surface
+    string $groupName = ($surfaceName + "_follicle_grp");
+    int $spanM = $span-1;
+    select $surfaceName;
+    string $hairName = `format -stringArg $spanM -stringArg $spansV "createHair ^1s ^2s 10 0 0 1 0 5 0 1 2 1"`;
+    string $hair[] = `eval $hairName`;
+
+    // delete the util node for the nHair system
+    string $hairUtil[] = {"hairSystem1","pfxHair1","nucleus1"};
+    select "hairSystem1Follicles";
+    rename $groupName;
+    for ($item in $hairUtil){
+        delete $item;
+    }
+    // rename and delete on the follicle group
+    string $follicleNode[] = `listRelatives -c $groupName`;
+    //rename follicle
+    int $n = 0;
+    for($follicle in $follicleNode){
+        // delete curve transfrom node (curve)
+        string $curGp[] = `listRelatives -c $follicle`;
+        delete $curGp[1];
+        // rename follicle transform
+        string $cur_follicle = `rename $follicle ($surfaceName + "_"+ $n + "_follicle")`;
+        
+        //create joint on the follicle
+        select $cur_follicle;
+        string $follicle_joint = `joint -n ($surfaceName + "_f_" + $n + "_jnt")`;
+        setAttr ($follicle_joint + ".radius") 0.2;
+        $n++;
+    }
+
+    //create clusters for the surface
+    int $i;
+    for ($i = 0; $i <= $span; $i++){
+        // top cluster
+        if ($i == 0){
+            int $si = $i + 1;
+            select ($surfaceName + ".cv[" + $i + "][0]");
+            select -add ($surfaceName + ".cv[" + $i + "][1]");
+            select -add ($surfaceName + ".cv[" + $si + "][0]");
+            select -add ($surfaceName + ".cv[" + $si + "][1]");
+            string $surf_cluster[] = `cluster -n ($surfaceName + "_cluster_top")`;
+            select -clear;
+            
+        }
+        
+        else if($i == 1){
+            print ($i);
+        }
+        else if($i == ($span -1)){
+            print ($i);
+        }
+        // bottom cluster
+        else if($i == ($span)){
+            int $si = $span - 1;
+            select ($surfaceName + ".cv[" + $i + "][0]");
+            select -add ($surfaceName + ".cv[" + $i + "][1]");
+            select -add ($surfaceName + ".cv[" + $si + "][0]");
+            select -add ($surfaceName + ".cv[" + $si + "][1]");
+            string $surf_cluster[] = `cluster -n ($surfaceName + "_cluster_bottom")`;
+            select -clear;
+        }
+        
+        else{
+            select ($surfaceName + ".cv[" + $i + "][0]");
+            select -add ($surfaceName + ".cv[" + $i + "][1]");
+            string $surf_cluster[] = `cluster -n ($surfaceName +"_cluster_" + $i)`;
+            
+        }
+    }
+}

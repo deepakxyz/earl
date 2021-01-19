@@ -1,0 +1,24 @@
+// Grey qucik cmd
+
+// quick rename
+global proc rn(string $name){
+    //selection
+    string $selection[];
+    string $selection[] = `ls -sl -tr`;
+    
+    for($i=0; $i< (size($selection));$i++){
+        string $rename = ($name + "_" + $i);
+        rename $selection[$i] $rename;
+    }
+}
+
+
+// Center pivot
+global proc cp(){
+	CenterPivot;
+}
+
+// Match pivot
+global proc mp(){
+    MatchPivots;
+}

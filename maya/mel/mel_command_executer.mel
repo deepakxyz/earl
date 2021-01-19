@@ -1,0 +1,16 @@
+//assign window variable
+string $mceWin;
+// delete the window if exists
+if (`window -exists $mceWin`){
+    deleteUI -window $mceWin;
+}
+// create windows flag ( s, non resizable)
+string $mceWin = `window -t "Grey Tool" -s false`;
+
+//layout
+columnLayout;
+
+cmdScrollFieldExecuter -w 400 -h 30;
+
+showWindow $mceWin;
+

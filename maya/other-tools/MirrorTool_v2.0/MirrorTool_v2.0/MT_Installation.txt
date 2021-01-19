@@ -1,0 +1,41 @@
+/****************************************** Mirror Tool v_2.0 ***************************************************************
+     ________________________________________
+    |                                        |
+    |  Script done by: Klaudio Ladavac       |
+    |  Contact email : klaudio2u@gmail.com   |
+    |________________________________________|
+
+    
+
+
+>>  INSTALLATION  ---------------------------------------------------------------------------------------------------------------------------------
+
+
+       1. Copy-Paste entire folder "K_Mirror_icons" itself (which has icons for the script inside) into following folder: 
+
+C:\Users\USERNAME\Documents\maya\20xx\prefs\icons
+       
+
+       2. Copy-Paste .mel script file "k_mirrorToolStartUI.mel" into following folder:
+
+C:\Users\USERNAME\Documents\maya\20xx\scripts
+
+
+       3. In Maya open Script Editor (make sure you are under MEL tab), copy two lines bellow into MEL tab and run the script (double blue lines). 
+
+source "k_mirrorToolStartUI.mel";
+k_mirrorToolStartUI();
+       
+
+
+	4. To put the script in the shelf just highlight previous two lines or press (Ctrl+A) and Middle-Mouse-drag it on the shelf. 
+
+
+
+	5. You can add custom icon for Mirror Tool which is in folder (from step 1 above). Right-Mouse-Click on the shelf icon you have just created and 
+   	   choose "Open". You will see "Icon Name" field and on the right of it click small folder, navigate to "K_Mirror_icons" folder in your prefs and 
+   	   choose "ShelfIcon.png" image.  
+
+
+
+>>  -----------------------------------------------------------------------------------------------------------------------------------------------

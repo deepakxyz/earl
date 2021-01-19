@@ -1,0 +1,292 @@
+/*
+
+ maya/scripts/getVertices.mel
+
+ A few utility procs for getting vertices and cvs as well as the normals of
+
+ a polymesh. Currently, there is not a proc that get the normals of a nurbs
+
+ surface.
+
+ 
+
+ M.KESSON
+
+ APR 21 2014
+
+*/
+
+ 
+
+// ---------------------- WHOLE OBJECT BEGIN ------------------------------------
+
+// Only works on a polymesh
+
+global proc getVertices(string $tnode, vector $data[]) {
+
+    int     $count = size($data);      // data may already have info - get its length
+
+    int     $num_vertices[] = `polyEvaluate -v $tnode`; // query the number of vertices
+
+    string  $shapes[] = `listRelatives -shapes $tnode`; // get the name of the shape node
+
+    string  $shape = $shapes[0];
+
+    float   $position[];
+
+ 
+
+    for($n = 0; $n < $num_vertices[0]; $n++) {
+
+        $vertex_text = $shape + ".vtx[" + $n + "]";
+
+        $position = `pointPosition -local $vertex_text`;
+
+        $data[$count] = <<$position[0], $position[1], $position[2]>>;
+
+        $count++;
+
+        }
+
+    }
+
+// ---------------------- WHOLE OBJECT END ------------------------------------
+
+ 
+
+// ---------------------- SELECTIONS BEGIN ------------------------------------
+
+// Utility proc used by getSelectedVertices() and getSelectedCvs()
+
+// Use with mask as 28 for nurbs cvs or 31 for polymesh vertices
+
+global proc string[] getSelected(int $mask) {
+
+ string $strs[] = `filterExpand -sm $mask`;
+
+ return $strs;
+
+ }
+
+ 
+
+// Only works on a polymesh whose vertices have been selected.
+
+global proc int getSelectedVertices(vector $data[]) {
+
+ string $strs[] = getSelected(31);
+
+ if(size($strs) == 0) {
+
+  print("Error: getSelectedVertices() - no selection was found\n");
+
+  return 0;
+
+  }
+
+ int   $count = size($data);
+
+ for($n = 0; $n < size($strs); $n++) {
+
+     string $str = $strs[$n];
+
+  float  $pos[] = `pointPosition -local $str`;
+
+        $data[$count] = <<$pos[0], $pos[1], $pos[2]>>;
+
+        $count++;
+
+  }
+
+ return 1;
+
+ }
+
+// Only works on a nurbs surface whose Cvs have been selected.
+
+global proc getSelectedCvs(vector $data[]) {
+
+ string $strs[] = getSelected(28);
+
+ if(size($strs) == 0) {
+
+  print("Error: getSelectedCvs() - no selection was found\n");
+
+  return;
+
+  }
+
+ int   $count = size($data);
+
+ for($n = 0; $n < size($strs); $n++) {
+
+     string $str = $strs[$n];
+
+  float  $pos[] = `pointPosition -local $str`;
+
+        $data[$count] = <<$pos[0], $pos[1], $pos[2]>>;
+
+        $count++;
+
+  }
+
+ }
+
+// ---------------------- SELECTIONS END ------------------------------------
+
+ 
+
+// ---------------------- NORMALS BEGIN ------------------------------------
+
+// Used by getNormals()
+
+global proc vector getAverageNormal(float $norms[]) {
+
+    float   $x = 0, $y = 0, $z = 0;
+
+    int     $numComps = size($norms);
+
+    int     $numNorms = $numComps/3;
+
+ 
+
+    if($numNorms == 1)
+
+        return <<$norms[0],$norms[1],$norms[2]>>;
+
+    for($n = 0; $n < $numComps - 3; $n += 3) {
+
+        $x += $norms[$n];
+
+        $y += $norms[$n + 1];
+
+        $z += $norms[$n + 2];
+
+        }
+
+    return <<$x/$numNorms, $y/$numNorms, $z/$numNorms >>;
+
+    }
+
+global proc getNormals(string $tnode, vector $data[]) {
+
+    int     $count = size($data);
+
+    int     $num[] = `polyEvaluate -v $tnode`;
+
+    string  $shp[] = `listRelatives -shapes $tnode`;
+
+    string  $shape = $shp[0];
+
+    float   $norms[];
+
+    vector  $ave;
+
+ 
+
+    for($n = 0; $n < $num[0]; $n++) {
+
+        $vert = $shape + ".vtx[" + $n + "]";
+
+        $norms = `polyNormalPerVertex -q -xyz $vert`;
+
+        $ave = getAverageNormal($norms);
+
+        $data[$count] = <<$ave.x, $ave.y, $ave.z>>;
+
+        $count++;
+
+        }
+
+    }
+
+global proc getSelectedNormals(vector $data[])
+
+{
+
+    string $strs[] = getSelected(31);
+
+    float $norms[];
+
+    if(size($strs) == 0) {
+
+ print("Error: getSelectedCvs() - no selection was found\n");
+
+ return;
+
+ }
+
+    int   $count = size($data);
+
+    for($n = 0; $n < size($strs); $n++) {
+
+ string $vert = $strs[$n];
+
+ $norms = `polyNormalPerVertex -q -xyz $vert`;
+
+        $ave = getAverageNormal($norms);
+
+        $data[$count] = <<$ave.x, $ave.y, $ave.z>>;
+
+        $count++;
+
+ }
+
+}
+
+// ---------------------- NORMALS END ------------------------------------
+
+ 
+
+global proc float[] aimY(vector $vec) {
+
+ float $out[2];
+
+ float $xAngle, $zAngle, $xyLength, $vecLength;
+
+ 
+
+ $xyLength = sqrt(($vec.x) * ($vec.x) +
+
+                   ($vec.y) * ($vec.y));
+
+ $vecLength = sqrt(($vec.x) * ($vec.x) +
+
+                    ($vec.y) * ($vec.y) +
+
+                    ($vec.z) * ($vec.z));
+
+ 
+
+ // $xyLength will be zero when $vec is pointing
+
+ // along the +z or -z axis
+
+ if($xyLength == 0)
+
+     $zAngle = ($vec.x) > 0 ? deg_to_rad(90) : deg_to_rad(-90);
+
+ else
+
+     $zAngle = acos(($vec.y)/$xyLength);
+
+ 
+
+ $xAngle = acos($xyLength/$vecLength);
+
+ 
+
+ $xAngle = ($vec.z) > 0 ? $xAngle : -$xAngle;
+
+ $out[0] = rad_to_deg($xAngle);
+
+ 
+
+ $zAngle = ($vec.x) > 0 ? -$zAngle : $zAngle;
+
+ $out[1] = rad_to_deg($zAngle);
+
+ return $out;
+
+ }
+

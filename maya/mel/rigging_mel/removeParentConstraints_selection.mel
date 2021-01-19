@@ -1,0 +1,14 @@
+////rPC - removes parent constraints from selected objects.
+
+//Find selection...
+string $selCnsObj[] = `ls -sl`;
+
+//For Loop...
+for ($cns in $selCnsObj){
+//Find parent constraint of selected object...
+string $findPtCnst[] = `listRelatives -type parentConstraint $cns`;
+//Delete parent constraint...
+select $findPtCnst[0]; doDelete;
+//Clear selection.
+select -cl;
+}

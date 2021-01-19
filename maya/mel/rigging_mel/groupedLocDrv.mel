@@ -1,0 +1,29 @@
+//GLDT - creates a grouped locDrv object and aligns it to selected object...
+
+//Find selection...
+string $selLoc[] = `ls -sl`;
+//For Loop...
+for ($objs in $selLoc){
+    //Create locators and group them separately...
+    string $loc[] = `spaceLocator`;
+    string $grpLoc = `group`;
+    //Align groups to each selected object...
+    parentConstraint $objs $grpLoc;
+    //Find and delete each group's parent constraint...
+    string $findPrtCns_grp[] = `listRelatives -type parentConstraint $grpLoc`;
+    select $findPrtCns_grp[0]; doDelete;
+    //Rename locators and groups to name of selected object...
+    string $rnmGrpLoc = `rename $grpLoc ("grpLocDrv_" + $objs)`;
+    string $rnmLoc = `rename $loc ("locDrv_" + $objs)`;
+    //Create locator "size" attribute
+    addAttr -at "float" -ln "size" -k 1 -dv 1.0 $rnmLoc;
+    //Find shape node of locator...
+    string $findLocShp[] = `listRelatives -type shape $rnmLoc`;
+    //Connect local scale of locator into its new "size" parameter...
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleX");
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleY");
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleZ");
+    //Set the default size to 100
+    setAttr ($rnmLoc + ".size") 100;
+    
+}

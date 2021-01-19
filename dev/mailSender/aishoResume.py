@@ -1,0 +1,101 @@
+
+msgContent = f"""\
+    <!DOCTYPE html>
+    <html>
+        <body style = "margin:0px;
+        padding: 0px;
+        padding-bottom: 1px;
+        background: #41424A;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 13px;
+        color:#868897;">
+    
+        <div id ="wrapper_top" style = "overflow: hidden;
+        width: 600px;
+        margin: 0px auto;
+        background: #41424A;
+        border-radius: 14px;"><br>
+        </div>
+    
+            <div id ="wrapper" style = "overflow: hidden;
+            width: 600px;
+            margin: 0px auto;
+            margin-bottom: 100px;
+            background: #FFFFFF;
+            border-radius: 14px;">
+            
+            <div id="header" style="margin-top:50px; margin-left:30px;">
+                    <h1 style="text-decoration: none;
+                    font-size: 18px;
+                    font-weight: 100;
+                    font-family: Segoe UI,Frutiger,Frutiger Linotype,Dejavu Sans,Helvetica Neue,Arial,sans-serif; 
+                    color: #868897;
+                    border-radius: 25px;
+                    ">
+                    
+                
+                <img style =" 
+                    border-radius: 60px;
+                    background-position: left top;
+                    width: 195px;
+                    height: 230px; 
+                    margin-left: 80px;
+                    margin-top:0px;
+                    background-image: url('https://lh3.googleusercontent.com/1kOn-_mW9dExuWbWeNMjGWGwDyC468HI-MjfSytmVt2IP9jDayjXfGym7l240GsDJ2L6nkGu0xSlEOo5q6C2CPrzLcfXJsJK3D75EgqBJLouxq_sPwGt71EuI4m91R8GhDHwLScc8bVZF7LYLnz20-iQfLY3c9rQB-pJ7UdIxP_7R9M2ipD15K4cViN2p2I2Rpu5p5BZusZmMMldjNoeU3wRqlwlRHag0hD4E8bpJuY3eejhd3h48gQ4_H-RwH1MV-vqjxsE6oUm5KzTCmy2fnmGKMcG8qDeZDdbuteSlG2IjtDw-njbeby06i-v61t_QbaqGTMjEZzFcF7Gbb2676CfzLqa1ibHl6u2Ao0uf9JWgLCCaVAWVlDfDRokCQWWubc3E9gI62BLGsDbt80j2PiXK3C2DdspWIkzRYwRBgaummBZe2Txe5ljk8pkA5Y9d16yNoH5v_0pPN9R3NlUuBJN9q6cIzj7M2FoqAgangte_1lxQSudRjAKJbj5hAlJgP-dpANzlRLBW5iZoW_lpovDQOiCVtXezsUQeLbRnGhwU2GSpjCKeZ1s3AG1EGH03D2KcdSBsE2YQClEj6ckk8tIH0pqyTTvEJqZTuJIFuQwHBECGGIO-Us9rm8-JCFjW38uO8M60Pfp6Kv_IbAxbZZ1L9pfHBCwEG92HIorksXF_WCeY6Hrr9fuBRXh3FqJJcxMNViuZmRmbNndsoCmbM1o=w751-h1009-no');
+                    background-size: 195px 260px
+                  "
+                >
+                Aishwarya  <i style ="font-size:18px; font-style: normal; font-weight:500;" >Varadharaj</i>
+            </div>
+            <div id = "content" style = 
+            "margin-top: 50px;
+             margin-left:130px;
+             font-size: 20px;
+             font-family: Segoe UI,Frutiger,Frutiger Linotype,Dejavu Sans,Helvetica Neue,Arial,sans-serif; 
+             
+             ">
+             Statement of purpose 
+                <div id ="subcontent" style= 
+                "margin-top:10px;
+                margin-bottom: 46px;
+                margin-right: 140px;
+                font-size: 14px;">
+                I’m Aishwarya, from Chennai, a dreamer, a perfectionist, believer in hard work but not without hard fun. The best part about architecture for me was that it didn’t just include designing of buildings but every aspect of designing. I have changed my answer every time I was asked about my career but after exploring this subject, I just knew what I wanted to do. the perspective through which I saw the world is  different.
+    knowledge gained through academic projects, competitions and practical training has shown me the path, the approach and method of handling real life scenarios.<br><br>
+    I am determined in the path i have lay down for myself and I think it is essential to be convinced so as to convince others in my work. Also, loved your work especially the attention given to details and conceptualization to your projects, If you're ever looking for someone to complement your design team I'd so appreciate your consideration.
+    
+            
+            </div>
+        
+                <a href="https://www.artstation.com/deepak_rajan" target="_blank"
+                style=" 
+           
+            background-color: #DAB028;
+            border: none;
+            color: white;
+            padding: 16px 120px;
+            text-align: center;
+            font-size: 16px;
+            margin: 10px 6px;
+            opacity: 0.6;
+            transition: 0.3s;
+            display: inline-block;
+            border-radius: 20px;
+            text-decoration: none;"
+            >Portfolio</a></b></p>
+            </div>
+            <div id="fotter" style="background: #D9D9DB;
+            text-align: center;
+            margin-top: 60px;
+            margin-bottom: 0px;
+            padding: 10px;">
+            Contact: aishwarya.varadharaj@gmail.com   |  +91 91504 45375
+            </div>
+  
+    
+        </div> </body></html>
+    
+    
+
+
+"""

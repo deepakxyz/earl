@@ -1,0 +1,28 @@
+//Joints on Vertices
+
+proc clJnt(){
+
+string $selVerts[] = `ls -sl -fl`;
+
+for ($vrtCls in $selVerts){ 
+
+    select $vrtCls;
+    
+	string $cl[] = `newCluster " -relative -envelope 1"`;
+
+	select -cl;
+
+	string $jnt = `joint`;
+
+	string $ptCnJnt[] = `pointConstraint -offset 0 0 0 -weight 1 $cl $jnt`;
+
+	string $findPtCn[] = `listRelatives -typ pointConstraint $jnt`;
+
+	select $findPtCn[0]; doDelete;
+
+	select -replace $cl; doDelete;
+
+	}
+
+}
+clJnt;

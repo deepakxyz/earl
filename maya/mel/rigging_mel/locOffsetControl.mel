@@ -1,0 +1,37 @@
+//LOT - Lcoator Offset Control Tool
+
+//Find selection...
+string $sel[] = `ls -sl`;
+
+//Check selection!  Must have 2 objects selected!
+if (size($sel) != 2){
+    warning "Must have 2 objects selected!";
+} else if (size($sel) == 2){
+    //If all is well, create constraint locator and rename...
+    string $locDrv[] = `spaceLocator`;
+    //Tokenize namespace objects
+    string $split[] ;  
+    tokenize $sel[1] ":" $split ;  
+    //Remove namespaces from 2nd selection and rename...
+    string $rmvNmsp = $split[size($split)-1] ; 
+    string $rnmLoc = `rename ($locDrv[0]) ("locOffset_" + $rmvNmsp)`;
+   //Match locator to joint that will drive it...
+    string $prtCnsLc[] = `parentConstraint $sel[0] $rnmLoc`;
+    //Find and delete locator's parent constraint...
+    string $findLocCns[] = `listRelatives -type parentConstraint $rnmLoc`;
+    select $findLocCns; doDelete;
+    //Parent locator to joint...
+    parent $rnmLoc $sel[0];
+    //Create locator "size" attribute
+    addAttr -at "float" -ln "size" -k 1 -dv 1.0 $rnmLoc;
+    //Find shape node of locator...
+    string $findLocShp[] = `listRelatives -type shape $rnmLoc`;
+    //Connect local scale of locator into its new "size" parameter...
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleX");
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleY");
+    connectAttr -f ($rnmLoc + ".size") ($findLocShp[0] + ".localScaleZ");
+    //Now, Parent Constrain 2nd selection (mesh) to locator...
+    parentConstraint -mo -weight 1 $rnmLoc $sel[1];
+    //Select locator to edit size.
+    select $rnmLoc;
+}

@@ -1,0 +1,106 @@
+//Edges to Pipe 2.0
+
+string $Curve[] = `polyToCurve -form 2 -degree 1 -conformToSmoothMeshPreview 1`;
+CenterPivot;
+string $Circle[] = `circle -c 0 0 0 -nr 0 1 0 -sw 360 -r 10 -d 3 -ut 0 -tol 0.01 -s 16 -ch 1`;
+
+float $objCenter[] = `objectCenter -gl $Curve[0]`;
+move -r $objCenter[0] $objCenter[1] $objCenter[2];
+
+select -tgl $Curve[0];
+
+string $Nurbs[] = `extrude -ch true -rn false -po 0 -et 2 -ucp 1 -fpt 1 -upn 1 -rotation 0 -scale 1 -rsp 1`;
+string $newPipe[] = `nurbsToPoly -mnd 1  -ch 1 -f 3 -pt 0 -pc 200 -chr 0.1 -ft 0.01 -mel 0.001 -d 0.1 -ut 1 -un 3 -vt 1 -vn 3 -uch 0 -ucr 0 -es 0 -ntr 0 -mrt 0 -uss 1`;
+CenterPivot;
+
+group -n "newPipeCommand1" $Circle[0] $Curve[0] $Nurbs[0] $newPipe[0];
+hide $Curve[0] $Circle[0] $Nurbs[0];
+select $newPipe[0];
+
+string $circleAttr[] = `listHistory $Circle[0]`;
+
+global proc cleanCommand() {
+    DeleteHistory;
+    string $curSelO[] = `ls -sl`;
+    string $curSelG[] = `pickWalk -d up`;
+    parent -world $curSelO;
+    polyNormalPerVertex -ufn true;
+    polySoftEdge -a 180 -ch 1;
+    
+//UV Generation
+    selectMode -co;
+    selectType -facet true;
+    SelectAll;
+    polyProjection -type Planar -md p;
+    select -r ($curSelO[0] + ".e[0]");
+    select -tgl ($curSelO[0] + ".e[1]");
+    SelectEdgeLoopSp;
+    string $seams[] = `ls -sl`;
+    SelectAll;
+    polyForceUV -unitize;
+    select -cl;
+    selectMode -co;
+    selectType -edge true;
+    SelectAll;
+    select -d $seams;
+    polyMapSewMove -nf 10 -lps 0 -ch 1;
+    SelectAll;
+    texLayoutAlong(0);
+    unfold -i 5000 -ss 0.001 -gb 0 -gmb 0.5 -pub 0 -ps 0 -oa 1 -us off;
+    texOrientShells;
+    texStraightenUVs "UV" 45;
+    texLayoutAlong(0);
+    select -cl;
+//UV Generation
+                    
+    selectMode -o;
+    DeleteHistory;
+    rename "pipeFromEdges1";
+    delete $curSelG;
+    deleteUI EtoP;
+    print "Clean Done";
+}
+
+global proc fixNormals() {
+    if (size(`ls -sl`)==0) {print "No Selected Objects";}
+    else {
+        selectMode -component;
+        selectType -facet true;
+        SelectAll;
+        ReversePolygonNormals;
+        select -cl;
+        selectMode -object;
+        print "Fix Normals";
+    }
+}
+
+//Window
+if (`window -exists EtoP`) {
+    deleteUI EtoP;
+}
+
+window -title "Edges to Pipe" -tlb 1 -s 0 EtoP;
+window -e -wh 390 65 EtoP;
+showWindow EtoP;
+//Window
+
+
+//UI
+columnLayout;
+
+rowLayout -numberOfColumns 2;
+    columnLayout;
+        attrFieldSliderGrp -l "Radius  " -cw3 50 60 130 -smn 1 -smx 30 -at ($circleAttr[1]+".radius");
+        separator -height 10 -style "none";
+        attrFieldSliderGrp -l "Sections  " -cw3 50 60 130 -smn 4 -smx 64 -at ($circleAttr[1]+".sections");               
+    setParent ..;                    
+    
+    rowLayout -numberOfColumns 2;
+        iconTextButton -style "iconAndTextVertical" -w 60 -h 60 -label "Clean" -image "FreezeTransform.png"
+                -command "cleanCommand";
+        iconTextButton -style "iconAndTextVertical" -w 60 -h 60 -label "Fix Normals" -image "polyNormal.png"
+                -command "fixNormals";
+    setParent ..;
+setParent ..;
+setParent ..;
+//UI

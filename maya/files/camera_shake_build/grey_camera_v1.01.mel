@@ -1,0 +1,104 @@
+//--------------------------------
+// Grey Camera Rig -version v1.01
+//--------------------------------
+// 
+
+global proc greyCamera(){
+    string $sl[] = `ls -sl -tr`;
+
+    string $cameraN[];
+
+    if (size($sl) < 1){
+        string $createCa[]= `camera -n "RenderCam"`;
+        string $sl[] = `ls -sl -tr`;
+        $cameraN = $sl;
+    }
+
+    else{
+        $cameraN = $sl;
+    }
+    //control tranform create
+    string $ctrl_loct = ($cameraN[0] + "_ctrl");
+    python ("from maya import cmds, OpenMaya as om");
+    python ("node = cmds.createNode('transform')");
+    rename $ctrl_loct;
+    select $ctrl_loct;
+    python ("sel = om.MSelectionList()\nmobj = om.MObject()");
+    python ("om.MGlobal.getActiveSelectionList(sel)");
+    python ("sel.getDependNode(0, mobj)\nfn = om.MFnDependencyNode(mobj)");
+    python ("fn.setIcon('UVPivotTop.png')");
+
+    //move to the camera loction and delete parent constarint
+    string $parentCon_0[] = `parentConstraint $cameraN[0] $ctrl_loct`;
+    delete $parentCon_0;
+    select $ctrl_loct;
+    makeIdentity -a 1;
+
+    // rotate transform create
+    string $rot_loct = ($cameraN[0] + "_rotate_ctrl");
+    python ("from maya import cmds, OpenMaya as om");
+    python ("node = cmds.createNode('transform')");
+    rename $rot_loct;
+    select $rot_loct;
+    python ("sel = om.MSelectionList()\nmobj = om.MObject()");
+    python ("om.MGlobal.getActiveSelectionList(sel)");
+    python ("sel.getDependNode(0, mobj)\nfn = om.MFnDependencyNode(mobj)");
+    python ("fn.setIcon('yawPitch.png')");
+
+    //move to the camera loction and delete parent constarint
+    string $parentCon_1[] = `parentConstraint $ctrl_loct $rot_loct`;
+    delete $parentCon_1;
+    select $rot_loct;
+    makeIdentity -a 1;
+
+    // parent the tranforms
+    parent $rot_loct $ctrl_loct;
+    parent $cameraN[0] $rot_loct;
+
+    setAttr ($cameraN[0]+".overrideEnabled") 1;
+    setAttr ($cameraN[0] + ".overrideColor") 4;
+
+    //lock the tranforms of rotate control
+    string $channels[] = {"translateX", "translateY", "translateZ", "rotateY", "scaleX", "scaleY", "scaleZ","visibility"};
+    for ($channel in $channels){
+        setAttr -k 1 -l 1 ($rot_loct + "." + $channel);    
+    }
+
+    //lock the transforms of camera
+    string $cameraChannel[] = {"translateX", "translateY", "translateZ", "rotateX", "rotateY", "rotateZ", "scaleX", "scaleY", "scaleZ","visibility"};
+    for ($channel in $cameraChannel){
+        setAttr -k 1 -l 1 ($cameraN[0] + "." + $channel);    
+    }
+
+    //select the control transform and add required attributes
+    select $ctrl_loct;
+    // Activation attr
+    addAttr -longName active -k 1 -defaultValue 0 -minValue 0 -maxValue 1;
+
+    // Rotation X attr
+    addAttr -longName xAmplitude -k 1 -defaultValue 1;
+    addAttr -longName xOffset -k 1 -defaultValue 0;
+    addAttr -longName xScale -k 1 -defaultValue 0.1 -minValue 0.1;
+
+    // Rotation Z attr
+    addAttr -longName zAmplitude -k 1 -defaultValue 1;
+    addAttr -longName zOffset -k 1 -defaultValue 0;
+    addAttr -longName zScale -k 1 -defaultValue 0.1 -minValue 0.1;
+
+    // Overall scale attr
+    addAttr -longName overallScale -k 1 -defaultValue 1 -minValue 1;
+
+    //set expression
+    expression -s ("// camera shake rotate\n\nfloat $xRotate = ((noise((frame/"+ $ctrl_loct +".xScale) + "+ $ctrl_loct +".xOffset) * "+ $ctrl_loct +".xAmplitude) * "+ $ctrl_loct +".overallScale) * "+ $ctrl_loct +".active;\ " + $rot_loct + ".rotateX = $xRotate;\n\nfloat $zRotate = ((noise((frame/"+ $ctrl_loct +".zScale) + "+ $ctrl_loct +".zOffset) * "+ $ctrl_loct +".zAmplitude)  * "+ $ctrl_loct +".overallScale) * "+ $ctrl_loct +".active;\ "+ $rot_loct +".rotateZ = $zRotate;")  
+                -o "" 
+                -n "expression_grey_cameraShake" 
+                -ae 1 
+                -uc all ;
+            
+}
+
+            
+greyCamera;
+
+
+

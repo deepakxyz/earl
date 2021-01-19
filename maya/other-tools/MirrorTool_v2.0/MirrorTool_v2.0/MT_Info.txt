@@ -1,0 +1,62 @@
+/****************************************** Mirror Tool v_2.0 ***************************************************************
+     ________________________________________
+    |                                        |
+    |  Script done by: Klaudio Ladavac       |
+    |  Contact email : klaudio2u@gmail.com   |
+    |________________________________________|
+
+    
+
+
+>> SUPPORTED MAYA VERSIONS ----------------------------------------------------------------------------------------------------
+   > All Maya 2016, including Maya LT version, and up. 
+
+
+
+
+>> HOW TO USE  ---------------------------------------------------------------------------------------------------------------------------------
+
+    > +/- X, +/-Y, +/-Z - buttons
+        - Select your object (mesh) and press on of the buttons to Mirror on it's World axis. 
+    > Rotate (custom input field)
+        - Set rotate angle or step rotate in the field then use Shift+LMB on +/- X, +/-Y, +/-Z - buttons to
+          step rotate Mirror plane.
+    > MirrorT - Vertices merge treshold for last added mirror tool.   
+    > APPLY - button
+        - Once you are done with Mirroring, select the mesh object (Mirror result) and press - Apply Button. 
+          It will clean History and everying else left behind by Mirroring.  
+
+For more info check links on Gumroad page or find my YouTube channel where you will find videos about Mirror Tools and how to use it. 
+ 
+
+
+
+>> RELEASE NOTES  ---------------------------------------------------------------------------------------------------------------------------------
+
+> v2.0 - release date: 26.04.2018
+   - NEW     - Added option for Mirror Cut Plane positioning. A toggle button on top with the option to position the mirror plane  
+               World Axis, Object Center, Pivot Position, Normal Direction. 
+   - NEW     - Option to adjust vertices Merge Threshold from last applied mirror tool.
+   - NEW     - Rotate multiple objects at once when Shift+LMB on buttons.
+   - NEW     - Rotation preset values when you RMB click on Rotate field.
+   - UPDATE  - Mirror plane color changed to cyan to match the color in Outliner for the same node
+   - UPDAtE  - Dropped support for Maya 2015 and bellow. 
+   - UPDATE  - New installation process ( be sure to check out the new video for Mirror Tool).
+
+> v1.0 - release date: 12.18.2016
+          
+
+
+
+ 
+>> OTHER NOTES  ---------------------------------------------------------------------------------------------------------------------------------
+      
+	- You can use the script for personl or/and commercial work whether you are freelance artist or you are working in the
+          studio. 
+        - Please don't distribute/share, change or reuse the script code without at least some credits. 
+        - Script is free and available for download on my Gumroad site. If your friends/colleagues want to use it, send them direct
+          Gumroad link instead, that way they will be able to get notification if there is an update.
+        - If you have feedback or/and suggestions feel free to send me a message on email above. 
+
+
+

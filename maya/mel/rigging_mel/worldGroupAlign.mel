@@ -1,0 +1,22 @@
+//Instructions: First, select control, then the control's main group;
+headsUpMessage "First, select control, then the control's main group";
+global proc lipGroups(){
+    string $sel[] = `ls -sl`;
+    if (size($sel) <= 1) {
+        error "First, select control, then the control's main group";}
+    else if (size($sel) == 2){
+    //Create Group
+    string $mkGrp = `group -em  -n ("grp_" + $sel[0])`;
+    //Align group to selection
+    string $prtCsObj[] = `parentConstraint $sel[0] $mkGrp`;
+    string $findPrtCns[] = `listRelatives -type parentConstraint $mkGrp`;
+    select $findPrtCns; doDelete;
+    //Parent group under defined node - in this case, Lips Control
+    parent $mkGrp $sel[1];
+    //Parent control object under group
+    parent $sel[0] $mkGrp;
+    //Clean up control
+    makeIdentity -apply true -t 1 -r 1 -s 1 -n 0;
+    }
+    }
+    lipGroups;

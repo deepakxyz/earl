@@ -1,0 +1,72 @@
+// create a revit to a curve point to a surface (closest)
+// selection order: curve CV, polySurface
+
+string $sel[] = `ls - sl`;
+
+//create cluster
+string $revit_clusters[] = `cluster $sel[0]`;
+string $clus = $revit_clusters[1];
+setAttr ($clus + ".visibility") 0;
+
+// get total vertex
+int $total_Vertex[] = `polyEvaluate -v $sel[1]`;
+string $Shapes[] = `listRelatives -shapes $sel[1]`;
+string $Shape = $Shapes[0];
+
+// poisiton of the cluster
+float $tpoint[] = `xform -q -ws -t $sel[0]`;
+
+// empty array
+float $everyLength[];
+
+for ($n = 0; $n < $total_Vertex[0]; $n++){
+    string $vertex_name = ($Shape + ".vtx[" + $n + "]");
+    float $pos[] = `xform -q -ws -t $vertex_name`;
+    //$everyLength[size($everyLength)] = mag($sub);
+    float $maggu = sqrt((($pos[0] - $tpoint[0]) * ($pos[0] - $tpoint[0])) + (($pos[1] - $tpoint[1]) * ($pos[1] - $tpoint[1])) + (($pos[2] - $tpoint[2]) * ($pos[2] - $tpoint[2])));
+    // print $maggu;
+    //print ($maggu + "\n");
+    $everyLength[$n] = $maggu;
+}    
+
+// sort function
+float $sortedLength[] = `sort $everyLength`;
+float $minLength = $sortedLength[0];
+
+// select the closest point number
+int $loc = 0;
+int $exLoc;
+for ($minVal in $everyLength){
+    $loc = $loc + 1;
+    if ($minVal == $minLength){
+        $exLoc = ($loc - 1) ;
+    }
+}
+
+// select the point
+
+string $cp = ($sel[1] +".vtx["+$exLoc+"]");
+select $cp;
+select -add $clus;
+
+// pointOnPolyConstraint
+pointOnPolyConstraint -mo;
+
+// create New group called Revit
+string $revitName = ("Revit_on_" + $sel[1]);
+
+python ("from maya import cmds, OpenMaya as om");
+python ("node = cmds.createNode('transform')");
+string $rName = `rename $revitName`;
+select $rName;
+python ("sel = om.MSelectionList()\nmobj = om.MObject()");
+python ("om.MGlobal.getActiveSelectionList(sel)");
+python ("sel.getDependNode(0, mobj)\nfn = om.MFnDependencyNode(mobj)");
+python ("fn.setIcon('zRivetToBone.png')");
+
+parent $clus $rName;
+
+
+// hide on outliner
+pickWalk  $clus;
+doHideInOutliner 1;

@@ -1,0 +1,10 @@
+////Match Transforms (Position/Orientation) Tool
+//Query Selection...
+string $selObj[] = `ls -sl`;
+//Parent Constrain first selection to second selection...
+parentConstraint -weight 1 $selObj[1] $selObj[0];
+//Find and delete Parent Constraint...
+string $findPtCns[] = `listRelatives -type parentConstraint $selObj[0]`;
+delete $findPtCns;
+//Select first selection.
+select $selObj[0];

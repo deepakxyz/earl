@@ -1,0 +1,37 @@
+RELEASE NOTES:
+
+>>>>  v2.1 - release date: 06.04.2019
+ - NEW -  Option to set default precision for distance tool as well as adjust interactively on the fly existing ones in the scene.
+
+
+>>>>  v2.01 - release date: 02.11.2018
+ - BUG FIX -  Maya 2016 getting invalid flag '-hlc' error. 
+
+>>>>  v2.0 - release date: 28.10.2018
+ - NEW - Option to measure the Angle between selected vertices. 
+       - 360 degrees calculation option since Maya can only calculate up to 180 degrees. 
+ - NEW - Option to constrain only on X or Y or Z axis as well as All axis at the same time.
+ - NEW - X, Y, Z and ALL axis are colorized to easily distingues between them if you have multiple. X-red, Y-green, Z-blue, ALL-white 
+ - NEW - Quick Auto UV (Options menu) - option based on "Automatic" UV creation - used for quick layout UVs if object was modified, combined or overlaping UVs and 
+         distance tool is not positining correctly.
+ - NEW - Preferences (Options menu) - Customize or et default the colors of distance tools as well as set default color and creation size of its locators.
+ - UPDATE - Delete selected distance tools is moved from RMB+click menu into its own button.
+ - UPDATE - UI update - option to show/hide "Units Convert" part for those who use it only occasionally or don't use it at all. 
+
+
+
+>>>>>  v1.2 - release date: 15.02.2018
+ - NEW - Option to delete only selected Distance Tool
+ - NEW - Option to select Locators of selected Distance tool or all in the scene - used to scale Locators appropriately and as needed. 
+ - UPDATE - Distance Tool now always create 2 locators when previous tools added and new one share the same vertice.
+ - UPDATE - UI Refresh
+
+
+
+>>>>  v1.1 - release date: 08.06.2017
+ - NEW - option to choose whether new created Distance Tool will be a constraint to selected vertices or just position new Distance Tool on selected vertices without constraints. 
+
+
+
+>>>>  v1.0 - release date: 07.02.2017
+ - initial release

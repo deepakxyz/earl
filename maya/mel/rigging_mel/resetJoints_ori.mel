@@ -1,0 +1,14 @@
+////wJnt - Clean up joint rotation channels
+//Query selection...
+string $selJnt[] = `ls -sl`;
+//For Loop - for all selected joints, do the following...
+for ($allJnts in $selJnt){
+//Set joint's "Joint Orient" values to zero...
+setAttr ($allJnts + ".jointOrientX") 0;
+setAttr ($allJnts + ".jointOrientY") 0;
+setAttr ($allJnts + ".jointOrientZ") 0;
+//Set joint's Rotate values to zero.
+setAttr ($allJnts + ".rx") 0;
+setAttr ($allJnts + ".ry") 0;
+setAttr ($allJnts + ".rz") 0;
+}
